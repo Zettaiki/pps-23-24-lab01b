@@ -28,7 +28,7 @@ public class LogicTest {
 
   @Test
   public void knightHit() {
-    assertThrowsExactly(IndexOutOfBoundsException.class, () -> {this.logics.hit(100, 100);});
+    assertThrowsExactly(IllegalArgumentException.class, () -> {this.logics.hit(100, 100);});
     assertFalse(this.logics.hit(4, 4));
     assertFalse(this.logics.hit(2, 1));
     assertTrue(this.logics.hit(0, 0));
