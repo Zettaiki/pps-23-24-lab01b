@@ -1,0 +1,84 @@
+@startuml uml
+
+interface Movement {
+    + canMove(currentPos : Pair<Integer, Integer>, nextPos : Pair<Integer, Integer>) : boolean
+}
+
+class KnightMovement implements Movement {
+    - boardSize : int
+}
+
+class PawnMovement implements Movement {
+    - boardSize : int
+}
+
+class MovementFactory {
+    + {static} generateMovement(pieceId : PieceId, boardSize : int)
+    - {static} generatePawnMovement(boardSize : int)
+    - {static} generateKnightMovement(boardSize : int)
+}
+
+interface Piece {
+    + getId() : PieceId
+    + move(cord : Pair<Integer, Integer>) : boolean
+    + getPos() : Pair<Integer, Integer>
+}
+
+class PieceImpl implements Piece {
+    - pieceId : PieceId
+    - movement : Movement
+    - position : Pair<Integer, Integer>
+}
+
+class PieceFactory {
+    + {static} generatePiece(pieceId : PieceId, boardSize : int)
+    + {static} generatePiece(pieceId : PieceId, boardSize : int, pos : Pair<Integer, Integer>)
+    - {static} generateKnightPiece(boardSize : int)
+    - {static} generateKnightPiece(boardSize : int, pos : Pair<Integer, Integer>)
+    - {static} generatePawnPiece(boardSize : int)
+    - {static} generatePawnPiece(boardSize : int, pos : Pair<Integer, Integer>)
+
+}
+
+enum PieceId {
+    - steps : int
+    + getSteps() : int
+}
+
+interface Board {
+    + {static} checkIfOutOfBounds(boardSize : int, pos : Pair<Integer, Integer>)
+    + addPiece(pieceId : PieceId) : void
+    + addPiece(pieceId : PieceId, pos : Pair<Integer, Integer>) : void
+    + movePiece(pieceId : PieceId, newPos : Pair<Integer, Integer>) : void
+    + getPiecePos(pieceId : PieceId) : Pair<Integer, Integer>
+}
+
+class BoardImpl implements Board {
+    - pieceList : List<Piece>
+    - boardSize : int
+    - getPiece(pieceId : PieceId) : Piece
+}
+
+Interface Logics {
+    + hit(row: int, col: int): boolean
+    + hasKnight(row: int, col: int): boolean
+    + hasPawn(row: int, col: int): boolean
+}
+
+class LogicsImpl implements Logics {
+    - boardSize : int
+    - board : Board
+}
+
+
+LogicsImpl *-- Board
+BoardImpl *-- Piece
+PieceImpl *-- Movement
+
+PieceFactory ..> PieceImpl
+MovementFactory ..> KnightMovement
+MovementFactory ..> PawnMovement
+
+PieceImpl *-- PieceId
+
+@enduml
